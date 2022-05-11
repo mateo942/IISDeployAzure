@@ -1,0 +1,40 @@
+{
+    "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+    "id": "db8231f7-9f36-4700-9a0f-69240db74bff",
+    "name": "iis-deploy-cleanup",
+    "friendlyName": "Cleanup iis release",
+    "description": "Cleanup iis release",
+    "category": "Utility",
+    "author": "Mateusz Piątek",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "instanceNameFormat": "IIS cleanup",
+    "inputs": [
+        {
+            "name": "SourceDirectory",
+            "type": "filePath",
+            "label": "Source directory",
+            "required": true
+        },
+        {
+            "name": "Keep",
+            "type": "string",
+            "label": "Keep releases",
+            "required": true
+        },
+        {
+            "name": "Pattern",
+            "type": "string",
+            "label": "Pattern",
+            "required": false
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "index.js"
+        }
+    }
+}
