@@ -4,6 +4,7 @@ import PoolHandler from './handlers/appPool/appPoolHandler';
 import WebApplicationHandler from './handlers/webApplication/webApplicationHandler';
 import WebSiteHandler from './handlers/webSite/webSiteHandler';
 import WebBindingHandler from './handlers/webBinding/webBindingHandler';
+import RestartPoolHandler from './handlers/restartPool/restartPoolHandler';
 
 async function run() {
   try {
@@ -21,6 +22,9 @@ async function run() {
         break;
       case "webBinding":
         new WebBindingHandler().execute();
+        break;
+      case "restart":
+        new RestartPoolHandler().execute();
         break;
       default:
         throw new Error(`Invalid command: ${command}`);

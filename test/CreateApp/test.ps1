@@ -63,4 +63,17 @@ Write-Host '';
 Write-Host '';
 Write-Host '';
 
+# Restart
+
+$env:INPUT_COMMAND = 'restart';
+
+$env:INPUT_RESTARTPOOLNAME = 'HelloWorld';
+
+node index.js
+
+Write-Host '';
+Write-Host '';
+Write-Host '';
+Write-Host '';
+
 Set-Location .\..\..\test\CreateApp

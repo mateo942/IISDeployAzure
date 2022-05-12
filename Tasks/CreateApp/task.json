@@ -24,7 +24,8 @@
                 "appPool": "appPool",
                 "webSite": "webSite",
                 "webApplication": "webApplication",
-                "webBinding": "webBinding"
+                "webBinding": "webBinding",
+                "restart": "restart"
             },
             "properties": {
                 "EditableOptions": "False"
@@ -173,6 +174,14 @@
             "label": "Web binding - Ssl container",
             "required": false,
             "visibleRule": "command = webBinding"
+        },
+
+        {
+            "name": "restartPoolName",
+            "type": "string",
+            "label": "App pool name",
+            "required": false,
+            "visibleRule": "command = restart"
         }
     ],
     "execution": {
