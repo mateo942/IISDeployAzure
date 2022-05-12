@@ -1,9 +1,27 @@
 import HanderBase from '../handerBase';
 import path from 'path';
+import tl = require('azure-pipelines-task-lib/task');
 
 export default class WebSiteHandler extends HanderBase {
 
-    public exists(name: string): boolean {
+    public execute(): void {
+        let name = tl.getInput("webSiteName") as string;
+        let options = {
+            physicalPath: tl.getInput("webSitePhysicalPath") as string,
+            appPoolName: tl.getInput("webSiteAppPoolName") as string,
+            thumbPrint: tl.getInput("webSiteThumbPrint") as string,
+            binding: tl.getInput("webSiteBinding") as string,
+            port: Number(tl.getInput("webSitePort"))
+        } as WebsiteOptions;
+
+        if (this.exists(name)) {
+            this.update(name, options);
+        } else {
+            this.create(name, options);
+        }
+    }
+
+    private exists(name: string): boolean {
         let tool = this.getPowershell();
         tool.line(path.join(__dirname, "exists.ps1"));
         tool.arg(`-name ${name}`);
@@ -11,7 +29,7 @@ export default class WebSiteHandler extends HanderBase {
         let result = tool.execSync(this.getToolOptions());
         let booleanResult = Boolean(result.code)
 
-        if(booleanResult){
+        if (booleanResult) {
             console.log("[✓] Exists");
         } else {
             console.log("[X] Not found");
@@ -20,7 +38,7 @@ export default class WebSiteHandler extends HanderBase {
         return booleanResult;
     }
 
-    public create(name: string, options: WebsiteOptions) {
+    private create(name: string, options: WebsiteOptions) {
         console.log(`Adding website: ${name}...`);
         var tool = this.getPowershell();
         tool.line(path.join(__dirname, "create.ps1"));

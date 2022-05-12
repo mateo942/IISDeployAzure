@@ -1,9 +1,26 @@
 import HanderBase from '../handerBase';
 import path from 'path';
+import tl = require('azure-pipelines-task-lib/task');
 
 export default class WebApplicationHandler extends HanderBase {
 
-    public exists(website: string, name: string): boolean {
+    public execute(): void {
+        let name = tl.getInput("webApplicationName", true) as string;
+        let webSiteName = tl.getInput("webApplicationWebSite", true) as string;
+
+        let options = {
+            physicalPath: tl.getInput("webApplicationPhysicalPath", true) as string,
+            applicationPool: tl.getInput("webApplicationApplicationPool", true) as string,
+        } as WebApplicationOptions
+
+        if (this.exists(webSiteName, name)) {
+            this.update(webSiteName, name, options);
+        } else {
+            this.create(webSiteName, name, options);
+        }
+    }
+
+    private exists(website: string, name: string): boolean {
         let tool = this.getPowershell();
         tool.line(path.join(__dirname, "exists.ps1"));
         tool.arg(`-site ${website}`);
@@ -12,7 +29,7 @@ export default class WebApplicationHandler extends HanderBase {
         let result = tool.execSync(this.getToolOptions());
         let booleanResult = Boolean(result.code)
 
-        if(booleanResult){
+        if (booleanResult) {
             console.log("[✓] Exists");
         } else {
             console.log("[X] Not found");
@@ -21,7 +38,7 @@ export default class WebApplicationHandler extends HanderBase {
         return booleanResult;
     }
 
-    public create(website: string, name: string, options: WebApplicationOptions) {
+    private create(website: string, name: string, options: WebApplicationOptions) {
         console.log(`Adding web application: ${name}...`);
         var tool = this.getPowershell();
         tool.line(path.join(__dirname, "create.ps1"));
@@ -34,7 +51,7 @@ export default class WebApplicationHandler extends HanderBase {
         console.log("[✓] Added");
     }
 
-    public update(website: string, name: string, options: WebApplicationOptions) {
+    private update(website: string, name: string, options: WebApplicationOptions) {
         console.log(`Updating web application: ${name}...`);
         var tool = this.getPowershell();
         tool.line(path.join(__dirname, "update.ps1"));
