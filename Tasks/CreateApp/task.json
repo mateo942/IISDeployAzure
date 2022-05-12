@@ -1,9 +1,9 @@
 {
     "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
-    "id": "db8231f7-9f36-4700-9a0f-69240db74bff",
+    "id": "4c9a6df9-0401-40cf-9fbb-b36f13e0e849",
     "name": "iis-deploy-cleanup",
-    "friendlyName": "Cleanup iis release",
-    "description": "Cleanup iis release",
+    "friendlyName": "IIS create app",
+    "description": "IIS create app",
     "category": "Utility",
     "author": "Mateusz Piątek",
     "version": {
@@ -11,25 +11,168 @@
         "Minor": 1,
         "Patch": 0
     },
-    "instanceNameFormat": "IIS cleanup",
+    "instanceNameFormat": "IIS: $(command)",
     "inputs": [
         {
-            "name": "SourceDirectory",
+            "name": "command",
+            "type": "pickList",
+            "label": "Command",
+            "defaultValue": "appPool",
+            "required": true,
+            "helpMarkDown": "Foo",
+            "options": {
+                "appPool": "appPool",
+                "webSite": "webSite",
+                "webApplication": "webApplication",
+                "webBinding": "webBinding"
+            },
+            "properties": {
+                "EditableOptions": "False"
+            }
+        },
+
+        {
+            "name": "appPoolName",
+            "type": "string",
+            "label": "App pool name",
+            "required": false,
+            "visibleRule": "command = appPool"
+        },
+        {
+            "name": "appPoolRuntimeVersion",
+            "type": "string",
+            "label": "App pool - Runtime Version",
+            "required": false,
+            "visibleRule": "command = appPool"
+        },
+        {
+            "name": "appPoolUse32Bit",
+            "type": "boolean",
+            "label": "App pool - 32bit",
+            "required": false,
+            "visibleRule": "command = appPool"
+        },
+
+        {
+            "name": "webSiteName",
+            "type": "string",
+            "label": "Website - Name",
+            "required": false,
+            "visibleRule": "command = webSite"
+        },
+        {
+            "name": "webSitePhysicalPath",
             "type": "filePath",
-            "label": "Source directory",
-            "required": true
+            "label": "Website - Physical path",
+            "required": false,
+            "visibleRule": "command = webSite"
         },
         {
-            "name": "Keep",
+            "name": "webSiteAppPoolName",
             "type": "string",
-            "label": "Keep releases",
-            "required": true
+            "label": "Website - App pool",
+            "required": false,
+            "visibleRule": "command = webSite"
         },
         {
-            "name": "Pattern",
+            "name": "webSiteThumbPrint",
             "type": "string",
-            "label": "Pattern",
-            "required": false
+            "label": "Website - Thumb print",
+            "required": false,
+            "visibleRule": "command = webSite"
+        },
+        {
+            "name": "webSiteBinding",
+            "type": "string",
+            "label": "Website - Binding",
+            "required": false,
+            "visibleRule": "command = webSite"
+        },
+        {
+            "name": "webSitePort",
+            "type": "string",
+            "label": "Website - Port",
+            "required": false,
+            "visibleRule": "command = webSite"
+        },
+
+        {
+            "name": "webApplicationName",
+            "type": "string",
+            "label": "Web application - Name",
+            "required": false,
+            "visibleRule": "command = webApplication"
+        },
+        {
+            "name": "webApplicationWebSite",
+            "type": "string",
+            "label": "Web application - Website name",
+            "required": false,
+            "visibleRule": "command = webApplication"
+        },
+        {
+            "name": "webApplicationPhysicalPath",
+            "type": "filePath",
+            "label": "Web application - Physical path",
+            "required": false,
+            "visibleRule": "command = webApplication"
+        },
+        {
+            "name": "webApplicationApplicationPool",
+            "type": "string",
+            "label": "Web application - App pool",
+            "required": false,
+            "visibleRule": "command = webApplication"
+        },
+        
+        {
+            "name": "webBindingName",
+            "type": "string",
+            "label": "Web binding - Name",
+            "required": false,
+            "visibleRule": "command = webBinding"
+        },
+        {
+            "name": "webBindingIpAddress",
+            "type": "string",
+            "label": "Web binding - Ip address",
+            "required": false,
+            "visibleRule": "command = webBinding"
+        },
+        {
+            "name": "webBindingPort",
+            "type": "string",
+            "label": "Web binding - Port",
+            "required": false,
+            "visibleRule": "command = webBinding"
+        },
+        {
+            "name": "webBindingHostName",
+            "type": "string",
+            "label": "Web binding - Host name",
+            "required": false,
+            "visibleRule": "command = webBinding"
+        },
+        {
+            "name": "webBindingProtocol",
+            "type": "string",
+            "label": "Web binding - Protocol",
+            "required": false,
+            "visibleRule": "command = webBinding"
+        },
+        {
+            "name": "webBindingThumbPrint",
+            "type": "string",
+            "label": "Web binding - Thumb print",
+            "required": false,
+            "visibleRule": "command = webBinding"
+        },
+        {
+            "name": "webBindingSslContainer",
+            "type": "string",
+            "label": "Web binding - Ssl container",
+            "required": false,
+            "visibleRule": "command = webBinding"
         }
     ],
     "execution": {
